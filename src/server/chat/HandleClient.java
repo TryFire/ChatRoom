@@ -64,8 +64,15 @@ public class HandleClient implements Runnable {
             while (isThisClientConnected) {
                 //DataInputStream dis = new DataInputStream(currSocket.getInputStream());
                 String msg = inputStream.readUTF();
-                for (HandleClient c:Server.getServer(SConstants.SERVER_PORT).getClents()) {
-                    c.send(msg);
+                if (msg.startsWith("@")){
+                    String id = msg.substring(1, 7);
+                    msg = "@" + Server.getServer(SConstants.SERVER_PORT).getUserNameByUserId(id) +"  " + msg.substring(7, msg.length());
+                    Socket s = Server.getServer(SConstants.SERVER_PORT).getClientSocket(id);
+                    new DataOutputStream(s.getOutputStream()).writeUTF(msg);
+                } else {
+                    for (HandleClient c : Server.getServer(SConstants.SERVER_PORT).getClents()) {
+                        c.send(msg);
+                    }
                 }
             }
         } catch (IOException e) {
@@ -78,7 +85,7 @@ public class HandleClient implements Runnable {
             }
             isThisClientConnected = false;
             isChating = false;
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
     }

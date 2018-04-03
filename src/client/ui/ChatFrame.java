@@ -86,9 +86,16 @@ public class ChatFrame extends JFrame {
                         int hour = c.get(Calendar.HOUR);
                         int minute = c.get(Calendar.MINUTE);
                         int second = c.get(Calendar.SECOND);
-                        msg = Client.getClient().getCurrUsername() + ":  " + hour + ":" + minute + ":" + second + '\n' + msg;
+                        if (msg.startsWith("@")) {
+                            msg = msg.substring(0,7) + Client.getClient().getCurrUsername() + ":  " + hour + ":" + minute + ":" + second + '\n' + msg.substring(7, msg.length());
+                            textSend.setText(msg.substring(0,7));
+                        } else {
+                            msg = Client.getClient().getCurrUsername() + ":  " + hour + ":" + minute + ":" + second + '\n' + msg;
+                            textSend.setText("");
+                        }
                         Client.getClient().getOutputStream().writeUTF(msg);
-
+                        String testOrigin = textRe.getText();
+                        textRe.setText(testOrigin + '\n' + msg +'\n');
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
@@ -99,15 +106,24 @@ public class ChatFrame extends JFrame {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String msg = textSend.getText().trim();
+
                 try {
+                    String msg = textSend.getText().trim();
                     Calendar c = Calendar.getInstance();
                     int hour = c.get(Calendar.HOUR);
                     int minute = c.get(Calendar.MINUTE);
                     int second = c.get(Calendar.SECOND);
-                    msg = Client.getClient().getCurrUsername() + ":  " + hour + ":"+minute+":" +second + '\n' + msg;
+                    if (msg.startsWith("@")) {
+                        msg = msg.substring(0,7) + Client.getClient().getCurrUsername() + ":  " + hour + ":" + minute + ":" + second + '\n' + msg.substring(7, msg.length());
+                        textSend.setText(msg.substring(0,7));
+                    } else {
+                        msg = Client.getClient().getCurrUsername() + ":  " + hour + ":" + minute + ":" + second + '\n' + msg;
+                        textSend.setText("");
+                    }
                     Client.getClient().getOutputStream().writeUTF(msg);
-                    textSend.setText("");
+
+                    String testOrigin = textRe.getText();
+                    textRe.setText(testOrigin + '\n' + msg +'\n');
                 } catch (IOException e1) {
                     e1.printStackTrace();
                 }
@@ -152,11 +168,13 @@ public class ChatFrame extends JFrame {
         jList.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                /*if (e.getClickCount() == 2) {
+                //System.out.println(e.getClickCount() + "");
+                if (e.getClickCount() == 2) {
                     int index = ((JList) e.getSource()).getSelectedIndex();
                     System.out.println(index);
-                    Client.getClient().chat(index);
-                }*/
+                    Object obj = jList.getModel().getElementAt(index);  //取出数据
+                    textSend.setText("@"+Client.getClient().getPOPID(index));
+                }
             }
         });
 
@@ -230,6 +248,24 @@ public class ChatFrame extends JFrame {
 
         ChatFrame chatFrame = new ChatFrame(v);
         //FriendsFrame friendsFrame = new FriendsFrame(v);
+
+
+
+        String code = "@123456@111a6sd4fs564f";
+        System.out.println(code.substring(1,6));
+        String[] s = code.split("@");
+
+        if (code.startsWith("@")){
+            System.out.print("trtttttttttttt");
+        }
+
+        System.out.print(s.length);
+
+        for (String aa:s
+             ) {
+            System.out.print(aa + "  ");
+        }
+
 
 
         try {

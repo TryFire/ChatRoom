@@ -36,6 +36,10 @@ public class Client {
         return client;
     }
 
+    public String getPOPID(int index) {
+        return ids.get(index);
+    }
+
     public void chat(int index) {
         String remote = ids.get(index);
         try {
